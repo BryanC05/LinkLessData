@@ -359,6 +359,7 @@ async function performScrape(url, screenshot = false, refresh = false) {
 
   try {
     const userAgent = elements.optionUserAgent ? elements.optionUserAgent.value : '';
+    const selectors = elements.customSelectors ? elements.customSelectors.value.trim() : '';
     const query = new URLSearchParams({
       url,
       screenshot: screenshot ? 'true' : 'false',
