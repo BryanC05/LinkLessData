@@ -13,22 +13,6 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/src/server.js"
-    },
-    {
-      "src": "/index.css",
-      "dest": "/public/index.css"
-    },
-    {
-      "src": "/app.js",
-      "dest": "/public/app.js"
-    },
-    {
-      "src": "/screenshots/(.*)",
-      "dest": "/public/screenshots/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/src/server.js"
     }
