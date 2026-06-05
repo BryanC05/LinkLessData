@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "public/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "src/server.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "public/assets/$1"
+    },
+    {
+      "src": "/screenshots/(.*)",
+      "dest": "public/screenshots/$1"
+    },
+    {
+      "src": "/(.*)\\.(js|css|png|jpg|ico|svg)",
+      "dest": "public/$1.$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "src/server.js"
+    }
+  ]
+}

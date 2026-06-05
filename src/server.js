@@ -460,3 +460,5 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`URL Preview Service Server started on http://localhost:${PORT}`);
 });
+
+export default app;
