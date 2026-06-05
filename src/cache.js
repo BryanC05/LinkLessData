@@ -7,12 +7,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const IS_VERCEL = !!process.env.VERCEL;
 const DATA_DIR = path.join(__dirname, '../data');
-if (!fs.existsSync(DATA_DIR)) {
+if (!IS_VERCEL && !fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-const DB_PATH = path.join(DATA_DIR, 'cache.db');
+const DB_PATH = IS_VERCEL ? ':memory:' : path.join(DATA_DIR, 'cache.db');
 
 class CacheManager {
   constructor() {

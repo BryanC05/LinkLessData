@@ -42,7 +42,7 @@ class WebhookManager {
   }
 
   async sendWithRetry(webhookUrl, payload, logEntry, secret) {
-    const maxAttempts = 3;
+    const maxAttempts = process.env.VERCEL ? 1 : 3;
     let success = false;
     let delay = 2000; // Starting retry delay
 

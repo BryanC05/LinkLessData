@@ -7,9 +7,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const IS_VERCEL = !!process.env.VERCEL;
 const PUBLIC_SCREENSHOTS_DIR = path.join(__dirname, '../public/screenshots');
 
-if (!fs.existsSync(PUBLIC_SCREENSHOTS_DIR)) {
+if (!IS_VERCEL && !fs.existsSync(PUBLIC_SCREENSHOTS_DIR)) {
   fs.mkdirSync(PUBLIC_SCREENSHOTS_DIR, { recursive: true });
 }
 
@@ -19,6 +20,10 @@ if (!fs.existsSync(PUBLIC_SCREENSHOTS_DIR)) {
  * @returns {Promise<string|null>} Relative URL path of the captured screenshot (e.g. "/screenshots/abcdef.png")
  */
 export async function captureScreenshot(url) {
+  if (process.env.VERCEL) {
+    console.warn('Screenshot capture disabled in serverless deployment.');
+    return null;
+  }
   let browser = null;
   try {
     const hash = crypto.createHash('md5').update(url).digest('hex');
@@ -74,6 +79,9 @@ export async function captureScreenshot(url) {
  * @returns {Promise<Buffer>} PDF Buffer
  */
 export async function generatePdf(articleHtml, title, author) {
+  if (process.env.VERCEL) {
+    throw new Error('PDF generation is disabled in serverless deployment.');
+  }
   let browser = null;
   try {
     browser = await chromium.launch({ headless: true });

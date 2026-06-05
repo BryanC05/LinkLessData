@@ -214,6 +214,9 @@ export function extractMetadataFromHtml(html, targetUrl, selectors = null) {
  * Runs a full browser page load to scrape dynamic pages
  */
 async function runBrowserCrawl(url, userAgent = null) {
+  if (process.env.VERCEL) {
+    throw new Error('Headless browser crawls are disabled in serverless deployment.');
+  }
   let browser = null;
   try {
     browser = await chromium.launch({ headless: true });
