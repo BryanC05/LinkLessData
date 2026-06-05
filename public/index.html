@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkLessData - URL Preview & Metadata Service</title>
+  
+  <!-- App Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='16' y='16' width='6' height='6' rx='1'/%3E%3Crect x='2' y='16' width='6' height='6' rx='1'/%3E%3Crect x='9' y='2' width='6' height='6' rx='1'/%3E%3Cpath d='M12 8v8M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3'/%3E%3C/svg%3E">
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/index.css">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <i data-lucide="network" class="logo-icon"></i>
+        <span class="logo-text">LinkLess<span>Data</span></span>
+      </div>
+      <div class="nav-actions">
+        <span class="status-indicator">
+          <span class="dot green"></span> Server Online
+        </span>
+        <div class="features-dropdown" id="features-dropdown">
+          <button class="btn btn-secondary btn-sm dropdown-trigger" id="btn-features-menu" type="button">
+            <i data-lucide="sliders" class="icon-inline"></i>
+            <span>Customize Workspace</span>
+            <i data-lucide="chevron-down" class="icon-inline"></i>
+          </button>
+          <div class="dropdown-menu" id="features-menu">
+            <div class="dropdown-title">Active Widgets</div>
+            
+            <label class="dropdown-item disabled">
+              <input type="checkbox" checked disabled>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> URL Scraper Engine</span>
+                  <span class="hint-tooltip-desc">Core scraping engine that downloads pages and extracts raw HTML tags, headings, and readability components.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Extracting text details, standard titles, descriptions, and site names from any webpage.</span>
+                </span>
+              </span>
+              <span>URL Extractor</span>
+            </label>
+            <label class="dropdown-item disabled">
+              <input type="checkbox" checked disabled>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Embed Preview Mockups</span>
+                  <span class="hint-tooltip-desc">Renders visual mockups representing exactly how parsed links will appear when posted on Discord, Slack, X/Twitter, and LinkedIn.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Auditing meta tag dimensions, description limits, and image aspects to ensure high visual click-through rates.</span>
+                </span>
+              </span>
+              <span>Embed Mockups</span>
+            </label>
+            <label class="dropdown-item disabled">
+              <input type="checkbox" checked disabled>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Caching Layer</span>
+                  <span class="hint-tooltip-desc">Persists previously scraped page metadata in a local SQLite database for instant, sub-millisecond retrieval on repeat requests.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Bypassing redundant networks to avoid rate-limiting blocks and speed up repeat queries.</span>
+                </span>
+              </span>
+              <span>Cached Previews</span>
+            </label>
+            
+            <div class="dropdown-divider"></div>
+            
+            <label class="dropdown-item">
+              <input type="checkbox" id="feat-inspector" checked>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Diagnostics & Readability</span>
+                  <span class="hint-tooltip-desc">Exposes parsed metadata variables, e-commerce CSS selectors, a cleaned article content view, raw tags list, and schema structures.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Performing SEO audits, printing clutter-free articles to PDF, and diagnosing custom data elements.</span>
+                </span>
+              </span>
+              <span>Inspector & Article</span>
+            </label>
+            <label class="dropdown-item">
+              <input type="checkbox" id="feat-analytics" checked>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Telemetry Dashboard</span>
+                  <span class="hint-tooltip-desc">Displays real-time performance diagnostics including total API requests, database hit rates, and average request latencies.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Monitoring overall server throughput, database performance, and caching effectiveness.</span>
+                </span>
+              </span>
+              <span>Analytics Metrics</span>
+            </label>
+            <label class="dropdown-item">
+              <input type="checkbox" id="feat-screenshot" checked>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Visual Screenshot Capture</span>
+                  <span class="hint-tooltip-desc">Uses a headless browser instance to capture a real-time thumbnail image viewport of the target site page.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Checking actual visual page designs and verifying pages render properly without depending on static links.</span>
+                </span>
+              </span>
+              <span>Screenshot Viewer</span>
+            </label>
+            <label class="dropdown-item">
+              <input type="checkbox" id="feat-keys" checked>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> API Credentials Quota</span>
+                  <span class="hint-tooltip-desc">Generates unique authorization keys (sk_live_...) to integrate the URL Scraper endpoint into external applications.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Enforcing client usage quotas (capped at 1000 requests per key) and securing backend routes.</span>
+                </span>
+              </span>
+              <span>Developer API Keys</span>
+            </label>
+            <label class="dropdown-item">
+              <input type="checkbox" id="feat-batch" checked>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="dropdown-hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Batch & Signed Webhooks</span>
+                  <span class="hint-tooltip-desc">Crawls multiple target URLs asynchronously in a queue, delivering results to listener endpoints signed with SHA-256 HMAC keys.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Performing large crawls in the background and updating client dashboards securely with verified request payloads.</span>
+                </span>
+              </span>
+              <span>Batch & Webhooks</span>
+            </label>
+          </div>
+        </div>
+        <button id="theme-toggle" class="btn-icon" title="Toggle Theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    
+    <!-- Hero Scraper Section styled as a Premium Browser Workspace -->
+    <section class="card hero-section browser-workspace">
+      <div class="browser-header">
+        <div class="browser-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="browser-nav-arrows">
+          <i data-lucide="arrow-left" class="nav-arrow disabled"></i>
+          <i data-lucide="arrow-right" class="nav-arrow disabled"></i>
+        </div>
+        <div class="browser-tabs-bar">
+          <div class="browser-tab active" style="display: inline-flex; align-items: center;">
+            <i data-lucide="search" class="tab-icon"></i>
+            <span class="hint-wrapper" style="margin-left: 0.15rem; margin-right: 0.2rem;">
+              <i data-lucide="help-circle" class="hint-icon" style="width: 13px; height: 13px;"></i>
+              <span class="right-hint-tooltip">
+                <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> URL Scraper Engine</span>
+                <span class="hint-tooltip-desc">Core scraping engine that downloads pages and extracts raw HTML tags, headings, and readability components.</span>
+                <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Extracting text details, standard titles, descriptions, and site names from any webpage.</span>
+              </span>
+            </span>
+            <span>Metadata Diagnostics Workbench</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="browser-viewport">
+        <div class="hero-header">
+          <h1>URL Preview & Metadata Extraction</h1>
+          <p>Extract and diagnose OpenGraph tags, Twitter Cards, schemas, JSON-LD, feeds, and screenshot thumbnails.</p>
+        </div>
+        
+        <form id="scraper-form" class="scraper-form">
+          <div class="browser-address-bar">
+            <div class="ssl-indicator" title="Secure LinkLess Connection">
+              <i data-lucide="lock" class="ssl-lock"></i>
+              <span class="ssl-text">SSL Secure</span>
+            </div>
+            <div class="address-divider"></div>
+            <input type="url" id="target-url" placeholder="https://example.com/some/article-path" required>
+            <button type="submit" class="address-bar-go" id="btn-scrape-inline" title="Run metadata extraction">
+              <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+          
+          <div class="scrape-options" style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; width: 100%;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="option-screenshot">
+              <span class="custom-checkbox"></span>
+              Capture Screenshot
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="option-refresh">
+              <span class="custom-checkbox"></span>
+              Force Refresh
+            </label>
+            <div class="select-wrapper" style="display: flex; align-items: center; gap: 0.4rem; margin-left: auto;">
+              <label for="option-user-agent" style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary); white-space: nowrap;">User-Agent:</label>
+              <select id="option-user-agent" style="background-color: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.3rem 0.5rem; color: var(--color-text-primary); font-family: inherit; font-size: 0.8rem; outline: none; cursor: pointer;">
+                <option value="">Default (LinkLessData-Scraper)</option>
+                <option value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36">Desktop Chrome</option>
+                <option value="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)">Googlebot 2.1 Crawler</option>
+                <option value="Discordbot/2.0">Discordbot 2.0</option>
+                <option value="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1">Mobile Safari (iPhone)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="custom-selectors-wrapper" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.5rem;">
+            <label for="custom-selectors" style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary);">Custom CSS Selector Extraction (optional - comma-separated list or JSON object)</label>
+            <textarea id="custom-selectors" rows="4" placeholder="e.g. price:.price&#10;rating:#stars&#10;author:a[rel='author']&#10;or JSON: {&#10;  &quot;price&quot;: &quot;.price&quot;,&#10;  &quot;rating&quot;: &quot;#stars&quot;&#10;}"></textarea>
+          </div>
+          
+          <!-- Hidden standard submit to keep event listeners happy -->
+          <button type="submit" class="btn btn-primary" id="btn-scrape" style="display: none;">
+            <span class="btn-text">Extract Metadata</span>
+            <i data-lucide="arrow-right" class="btn-icon-right"></i>
+          </button>
+        </form>
+
+        <!-- Dynamic Diagnostics Console -->
+        <div id="scrape-diagnostics" class="hidden diagnostics-console">
+          <div class="diag-header">
+            <i data-lucide="terminal" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+            <span>CRAWLER METADATA DIAGNOSTICS</span>
+          </div>
+          <div class="diag-grid">
+            <div class="diag-item">
+              <span class="diag-label">Response</span>
+              <span class="diag-val"><span class="dot-indicator green" id="diag-dot"></span> <span id="diag-status">200 OK</span></span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Scraper Engine</span>
+              <span class="diag-val" id="diag-method">HTTP Fetch</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Latency</span>
+              <span class="diag-val" id="diag-duration">0 ms</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Cache State</span>
+              <span class="diag-val" id="diag-cache">MISS</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Redirect Status</span>
+              <span class="diag-val text-truncate" id="diag-redirects">No redirects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <div class="workspace-grid">
+      
+      <!-- Left Column: Results & Interactive Previews -->
+      <div class="workspace-left">
+        
+        <!-- Live Social Preview Card Showcase -->
+        <div class="card preview-card-container">
+          <div class="card-header">
+            <h2>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Embed Preview Mockups</span>
+                  <span class="hint-tooltip-desc">Renders visual mockups representing exactly how parsed links will appear when posted on Discord, Slack, X/Twitter, and LinkedIn.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Auditing meta tag dimensions, description limits, and image aspects to ensure high visual click-through rates.</span>
+                </span>
+              </span>
+              Social Embed Mockups
+            </h2>
+            <p>How this link appears on major platforms</p>
+          </div>
+          
+          <div class="tab-header preview-tabs">
+            <button class="tab-btn active" data-target="mock-discord">Discord</button>
+            <button class="tab-btn" data-target="mock-slack">Slack</button>
+            <button class="tab-btn" data-target="mock-twitter">Twitter / X</button>
+            <button class="tab-btn" data-target="mock-linkedin">LinkedIn</button>
+          </div>
+          
+          <div class="tab-content-container">
+            <!-- Discord Preview -->
+            <div class="tab-panel active" id="mock-discord">
+              <div class="discord-card">
+                <div class="discord-left-accent" id="discord-accent"></div>
+                <div class="discord-body">
+                  <div class="discord-site-name" id="discord-site">Site Name</div>
+                  <div class="discord-title" id="discord-title-link">Page Title</div>
+                  <div class="discord-description" id="discord-desc">This is how your description text will look when pasted as a URL embed in a Discord channel. It wraps and has a solid background.</div>
+                  <div class="discord-fields" id="discord-meta-fields">
+                    <!-- Dynamic author or dates -->
+                  </div>
+                  <div class="discord-image-container">
+                    <img id="discord-img" src="" alt="Embed Image" class="hidden">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Slack Preview -->
+            <div class="tab-panel" id="mock-slack">
+              <div class="slack-card">
+                <div class="slack-left-accent" id="slack-accent"></div>
+                <div class="slack-body">
+                  <div class="slack-header">
+                    <img id="slack-favicon" class="slack-favicon" src="" alt="">
+                    <span class="slack-site-name" id="slack-site">Site Name</span>
+                  </div>
+                  <div class="slack-title" id="slack-title-link">Page Title</div>
+                  <div class="slack-description" id="slack-desc">This is Slack's style card. It is simple, text-centric, and compact, featuring an optional left color line.</div>
+                  <div class="slack-image-container">
+                    <img id="slack-img" src="" alt="Slack image" class="hidden">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Twitter/X Preview -->
+            <div class="tab-panel" id="mock-twitter">
+              <div class="twitter-card">
+                <div class="twitter-img-wrapper">
+                  <img id="twitter-img" src="" alt="Twitter image" class="hidden">
+                </div>
+                <div class="twitter-body">
+                  <div class="twitter-domain" id="twitter-domain">domain.com</div>
+                  <div class="twitter-title" id="twitter-title">Page Title</div>
+                  <div class="twitter-description" id="twitter-desc">Twitter cards stretch 100% width and stack the metadata details below the main featured image.</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- LinkedIn Preview -->
+            <div class="tab-panel" id="mock-linkedin">
+              <div class="linkedin-card">
+                <div class="linkedin-img-wrapper">
+                  <img id="linkedin-img" src="" alt="LinkedIn image" class="hidden">
+                </div>
+                <div class="linkedin-body">
+                  <div class="linkedin-title" id="linkedin-title">Page Title</div>
+                  <div class="linkedin-domain" id="linkedin-domain">domain.com • By Author</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata, Readability, and JSON Tabs -->
+        <div class="card detail-tabs-container" id="detail-tabs-container">
+          <div class="tab-header data-tabs" style="display: flex; align-items: center;">
+            <span class="hint-wrapper" style="margin-left: 0.5rem; margin-right: 0.8rem; display: inline-flex;">
+              <i data-lucide="help-circle" class="hint-icon"></i>
+              <span class="hint-tooltip">
+                <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Diagnostics & Readability</span>
+                <span class="hint-tooltip-desc">Exposes parsed metadata variables, e-commerce CSS selectors, a cleaned article content view, raw tags list, and schema structures.</span>
+                <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Performing SEO audits, printing clutter-free articles to PDF, and diagnosing custom data elements.</span>
+              </span>
+            </span>
+            <button class="data-tab-btn active" data-target="data-meta">Parsed Data</button>
+            <button class="data-tab-btn" data-target="data-readability">Readability Article</button>
+            <button class="data-tab-btn" data-target="data-structured">Structured Data (JSON-LD)</button>
+            <button class="data-tab-btn" data-target="data-json">JSON API Response</button>
+            <button class="data-tab-btn" data-target="data-raw-meta">Raw HTML Tags</button>
+            <button class="data-tab-btn" data-target="data-seo">SEO Audit Report</button>
+          </div>
+
+          <div class="tab-content-container">
+            <!-- Parsed Metadata Table -->
+            <div class="data-panel active" id="data-meta">
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Property</th>
+                      <th>Extracted Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Title</td><td id="meta-val-title" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Description</td><td id="meta-val-desc" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Site Name</td><td id="meta-val-sitename" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Author</td><td id="meta-val-author" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Published Date</td><td id="meta-val-date" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Content Type</td><td id="meta-val-type" class="val-placeholder">Pending query...</td></tr>
+                    <tr><td>Resolved URL</td><td id="meta-val-url" class="val-placeholder">Pending query...</td></tr>
+                    <tr>
+                      <td>Dominant Color</td>
+                      <td>
+                        <div class="color-badge-container">
+                          <span id="meta-val-color-box" class="color-preview-box"></span>
+                          <span id="meta-val-color-hex">#------</span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Playwright Screenshot</td>
+                      <td id="meta-val-screenshot-cell">
+                        <span class="val-placeholder">No screenshot captured.</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Technology Stack</td>
+                      <td id="meta-val-techstack">
+                        <span class="val-placeholder">Pending query...</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>RSS / Sitemap Feeds</td>
+                      <td id="meta-val-feeds">
+                        <span class="val-placeholder">Pending query...</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Readability Article View -->
+            <div class="data-panel" id="data-readability">
+              <div class="readability-meta-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                  <span class="read-badge"><i data-lucide="clock" class="icon-inline"></i> <span id="read-time">0</span> min read</span>
+                  <span id="read-author" class="read-author">Author Unknown</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="btn-export-pdf" style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                  <i data-lucide="download" style="width: 14px; height: 14px;"></i> Save as PDF
+                </button>
+              </div>
+              <div class="readability-article-body" id="readability-body">
+                <p class="placeholder-text">Please input a URL and scrape to extract readability contents.</p>
+              </div>
+            </div>
+
+            <!-- Structured Data (JSON-LD) Tree -->
+            <div class="data-panel" id="data-structured">
+              <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 600;">JSON-LD Structured Schema Explorer</h3>
+                <p style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.1rem;">Audits nested semantic Schema.org annotations parsed from script tags.</p>
+              </div>
+              <div id="structured-data-tree">
+                <div class="webhook-empty">No JSON-LD schemas detected yet. Execute a scrape command to scan.</div>
+              </div>
+            </div>
+
+            <!-- Format JSON View -->
+            <div class="data-panel" id="data-json">
+              <div class="json-header">
+                <span>Response Body</span>
+                <button class="btn btn-secondary btn-sm" id="btn-copy-json">
+                  <i data-lucide="copy"></i> Copy
+                </button>
+              </div>
+              <pre><code class="json-code" id="json-code-block">{ "message": "Execute a scrape command to see the API response." }</code></pre>
+            </div>
+
+            <!-- Raw Meta Tags -->
+            <div class="data-panel" id="data-raw-meta">
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tag Attribute</th>
+                      <th>Content</th>
+                    </tr>
+                  </thead>
+                  <tbody id="raw-meta-tags-tbody">
+                    <tr><td colspan="2" class="text-center placeholder-text">Perform a query to display raw HTML meta tags.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SEO Health Audit -->
+            <div class="data-panel" id="data-seo">
+              <div class="seo-audit-header" style="display: flex; align-items: center; gap: 2rem; border-bottom: 1px solid var(--color-border); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <div id="seo-score-circle" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--color-success); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; font-family: 'Outfit', sans-serif; background-color: var(--color-bg);">0</div>
+                <div class="seo-score-meta">
+                  <h3 style="font-size: 1.2rem; font-weight: 600;">Overall SEO Performance Score</h3>
+                  <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.1rem;">Assessed based on titles, descriptions, headings, images alt text, and canonical headers.</p>
+                </div>
+              </div>
+              <div class="seo-audit-checklist">
+                <ul class="subscribed-list" id="seo-audit-list" style="list-style: none;">
+                  <li class="webhook-empty">Audit pending. Submit a URL to scan tags.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Database Cache, Webhooks, and Analytics -->
+      <div class="workspace-right">
+        
+        <!-- Quick Analytics Cards -->
+        <div class="card" id="analytics-grid" style="display: flex; flex-direction: column;">
+          <div class="card-header" style="border-bottom: 1px solid var(--color-border); padding-bottom: 0.8rem; margin-bottom: 1rem;">
+            <h2>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Telemetry Dashboard</span>
+                  <span class="hint-tooltip-desc">Displays real-time performance diagnostics including total API requests, database hit rates, and average request latencies.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Monitoring overall server throughput, database performance, and caching effectiveness.</span>
+                </span>
+              </span>
+              Analytics Metrics
+            </h2>
+          </div>
+          <div class="analytics-grid" style="box-shadow: none; border: 0; background: transparent; padding: 0;">
+            <div class="card analytics-card">
+              <div class="analytics-icon bg-blue"><i data-lucide="globe"></i></div>
+              <div class="analytics-info">
+                <div class="analytics-label">Total Requests</div>
+                <div class="analytics-value" id="stat-requests">0</div>
+              </div>
+            </div>
+            <div class="card analytics-card">
+              <div class="analytics-icon bg-green"><i data-lucide="zap"></i></div>
+              <div class="analytics-info">
+                <div class="analytics-label">Cache Hit Rate</div>
+                <div class="analytics-value" id="stat-hitrate">0%</div>
+              </div>
+            </div>
+            <div class="card analytics-card">
+              <div class="analytics-icon bg-purple"><i data-lucide="gauge"></i></div>
+              <div class="analytics-info">
+                <div class="analytics-label">Avg Scrape Time</div>
+                <div class="analytics-value" id="stat-latency">0 ms</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screenshot Viewer Card -->
+        <div class="card screenshot-viewer-card hidden" id="screenshot-card">
+          <div class="card-header">
+            <h2>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Visual Screenshot Capture</span>
+                  <span class="hint-tooltip-desc">Uses a headless browser instance to capture a real-time thumbnail image viewport of the target site page.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Checking actual visual page designs and verifying pages render properly without depending on static links.</span>
+                </span>
+              </span>
+              Visual Screenshot
+            </h2>
+            <button class="btn-icon" id="btn-close-screenshot" title="Hide screenshot"><i data-lucide="x"></i></button>
+          </div>
+          <div class="screenshot-img-container">
+            <img id="visual-screenshot-img" src="" alt="Full page screenshot">
+          </div>
+        </div>
+
+        <!-- Caching Database Logger -->
+        <div class="card cache-card">
+          <div class="card-header">
+            <div class="title-with-badge">
+              <h2>
+                <span class="hint-wrapper">
+                  <i data-lucide="help-circle" class="hint-icon"></i>
+                  <span class="hint-tooltip">
+                    <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Caching Layer</span>
+                    <span class="hint-tooltip-desc">Persists previously scraped page metadata in a local SQLite database for instant, sub-millisecond retrieval on repeat requests.</span>
+                    <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Bypassing redundant networks to avoid rate-limiting blocks and speed up repeat queries.</span>
+                  </span>
+                </span>
+                Cached Previews
+              </h2>
+              <span class="badge" id="cache-count">0</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-purge-cache">Purge All</button>
+          </div>
+          <div class="cache-list-wrapper">
+            <ul class="cache-list" id="cache-items-list">
+              <li class="cache-empty">No cached URLs found.</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Developer API Keys Card -->
+        <div class="card api-keys-card" id="api-keys-card">
+          <div class="card-header">
+            <h2>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> API Credentials Quota</span>
+                  <span class="hint-tooltip-desc">Generates unique authorization keys (sk_live_...) to integrate the URL Scraper endpoint into external applications.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Enforcing client usage quotas (capped at 1000 requests per key) and securing backend routes.</span>
+                </span>
+              </span>
+              Developer API Credentials
+            </h2>
+          </div>
+          <div class="webhook-section" style="border-bottom: 1px solid var(--color-border); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+            <h3>Generate Secret Token</h3>
+            <p>Generate secure API keys to authorize external queries via HTTP headers (quota: 1000 requests/key).</p>
+            <form id="key-generation-form" class="webhook-form">
+              <input type="text" id="key-name-input" placeholder="e.g. Production Mobile App" style="flex-grow: 1; background-color: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.4rem 0.8rem; color: var(--color-text-primary); font-family: inherit; font-size: 0.85rem; outline: none;" required>
+              <button type="submit" class="btn btn-primary btn-sm">Generate Key</button>
+            </form>
+          </div>
+          <div class="subscribed-list-wrapper">
+            <label>Active Secret Keys:</label>
+            <ul class="subscribed-list" id="active-keys-list" style="max-height: 180px; overflow-y: auto; margin-top: 0.3rem;">
+              <li class="webhook-empty">No developer API keys active.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Batch Processing & Webhooks -->
+        <div class="card webhook-card" id="webhook-card">
+          <div class="card-header">
+            <h2>
+              <span class="hint-wrapper">
+                <i data-lucide="help-circle" class="hint-icon"></i>
+                <span class="hint-tooltip">
+                  <span class="hint-tooltip-title"><i data-lucide="info" style="width: 11px; height: 11px;"></i> Batch & Webhooks</span>
+                  <span class="hint-tooltip-desc">Crawls multiple target URLs asynchronously in a queue, delivering results to listener endpoints signed with SHA-256 HMAC keys.</span>
+                  <span class="hint-tooltip-usecase"><strong>Use Case:</strong> Performing large crawls in the background and updating client dashboards securely with verified request payloads.</span>
+                </span>
+              </span>
+              Batch & Webhooks Panel
+            </h2>
+          </div>
+          <div class="webhook-section">
+            <h3>Subscribe Webhook Endpoint</h3>
+            <form id="webhook-subscribe-form" class="webhook-form">
+              <input type="url" id="webhook-url" placeholder="https://yourserver.com/webhook" required>
+              <button type="submit" class="btn btn-secondary btn-sm">Subscribe</button>
+            </form>
+            <div class="subscribed-list-wrapper">
+              <label>Active Subscriptions:</label>
+              <ul class="subscribed-list" id="active-webhooks-list">
+                <li class="webhook-empty">No active webhook URL subscriptions.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="webhook-section batch-section">
+            <h3>Bulk Batch Scraper</h3>
+            <p>Input multiple URLs (one per line) to process in batch.</p>
+            <textarea id="batch-urls-input" rows="8" placeholder="https://github.com&#10;https://wikipedia.org&#10;https://nodejs.org"></textarea>
+            <div class="batch-actions">
+              <input type="url" id="batch-webhook-target" placeholder="Webhook URL for results (optional)">
+              <button class="btn btn-secondary btn-sm" id="btn-submit-batch">Trigger Batch Scrape</button>
+            </div>
+          </div>
+
+          <div class="webhook-section console-section">
+            <h3>Real-time Webhook Dispatcher Logs</h3>
+            <div class="webhook-console" id="webhook-console-logs">
+              <div class="console-placeholder">// Dynamic logs from outgoing webhook dispatches will print here...</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2026 LinkLessData URL Scraper. Designed using custom solid HSL colors.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Dashboard JavaScript Code -->
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

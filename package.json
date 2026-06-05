@@ -1,0 +1,24 @@
+{
+  "name": "link-less-data-preview-service",
+  "version": "1.0.0",
+  "description": "Self-hosted URL Preview & Metadata Extraction Service with Analytics Dashboard",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "postinstall": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "jimp": "^0.22.12",
+    "jsdom": "^24.1.0",
+    "playwright": "^1.44.1",
+    "sqlite3": "^5.1.7"
+  }
+}
